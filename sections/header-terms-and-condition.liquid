@@ -1,0 +1,17 @@
+<header class="inner-PageHeader">
+  <div class="inner-SectionHeader" style="background-image:url({{ section.settings.termsconditionbanner | img_url:'1024x'}});">
+    <h1 class="inner-SectionHeader__Heading">{{ page.title }}</h1>
+  </div>
+</header>
+{% schema %}
+  {
+    "name": "Terms & Condition Image",
+    "settings": [
+		{
+          "type": "image_picker",
+          "id": "termsconditionbanner",
+          "label": "Banner image"
+        }
+	]
+  }
+{% endschema %}

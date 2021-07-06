@@ -1,0 +1,122 @@
+<!--<script>
+$m(".mlvedaform").bind("DOMSubtreeModified", function() {
+ 
+  $m("span:contains('mlveda_country')").each(function(){
+  	if ($m(this).parent().css('display') !== 'none') {
+        $m(this).parent().css('display', 'none');
+    }
+  });
+
+});
+
+</script>
+-->
+
+
+<script>
+
+var mlveda_condition_flag = false;
+var mlveda_observer = new MutationObserver(function(mutations){
+			
+		
+        
+			mutations.forEach(function(mutation) {
+              
+              
+                if(mutation.addedNodes[0] && mutation.addedNodes[0].childNodes[0] && mutation.addedNodes[0].childNodes[0].innerHTML === "mlveda_country" ){
+                                 window.mlveda_label = mutation.addedNodes[0].childNodes[0];
+//                  				console.log("hello");
+                                $m(mlveda_label).parent().css("display" , "none");
+                }
+    
+                    
+                $m("div.OptionSelector:not(.mlveda_country,.vichitra)").each(function(){
+                      var flag = 1;
+//                      console.log("select "+this);
+//                      console.log($m(this).children().length);
+                      $m(this).find(".Popover__ValueList").children().each(function(option){
+//                        console.log($m(this).parent().attr("class"));
+                        
+//                        console.log("option "+this);
+
+
+                        var str = $m(this).attr("data-value").trim();
+//                        console.log("value "+str);
+                        var res = pattern.test(str);
+//                        console.log("result "+res);
+                        if(res){
+                          flag=2;
+                            return;
+                        }
+                        else{
+//                          console.log("in else "+str);
+                          $m(this).parent().parent().parent().addClass("vichitra");
+                            flag = 0;
+                            return false;
+                        }
+                      
+                      });
+//                      console.log("flag "+flag);
+                      if(flag==2){
+//                        console.log("it's time for magic");
+                         $m(this).addClass("mlveda_country");
+//                        console.log($m(this));
+                        $m(this).css("display" , "none");
+//                        console.log($m(this).val());
+                    
+                        
+                        var mlveda_interval = setInterval(function() {
+//                   console.log("setInterval");
+                       
+                   if("undefined" != typeof domDelegate && "undefined" != typeof domDelegate.Delegate){
+                     
+                     clearInterval(mlveda_interval);
+                      var event1 = new Event("click", {
+                        bubbles: true
+                      });
+                     mlveda_condition_flag = true;
+//                      console.log("in set timeout");
+                      $m("div.mlveda_country .Popover__ValueList").each(function(){
+//                        console.log("$m(this).val() : ",$m(this).find(".is-selected").attr("data-value"));
+                         	if("undefined" != typeof country && country !== null && $m(this).find(".is-selected").attr("data-value") == country){
+                              $m(this).attr("mlveda_country_found","true");
+//                           	  console.log("country");
+                              $m(this).find("[data-value='"+country+"']")[0].dispatchEvent(event1);
+                            }
+                            else if("undefined" != typeof continent && continent !== null && $m(this).find(".is-selected").attr("data-value") == continent){
+                              $m(this).attr("mlveda_continent_found","true");
+//                              console.log("continent");
+                              $m(this).find("[data-value='"+continent+"']")[0].dispatchEvent(event1);
+                            }
+                            else if("undefined" != typeof country && country !== null && "undefined" != typeof continent && continent !== null){
+                              if ( $m(this).find("[data-value='intl']").length != 0 ) {
+                                $m(this).find("[data-value='intl']")[0].dispatchEvent(event1);
+                              } else {
+                                $m(this).children()[0].dispatchEvent(event1);
+                              }
+                            }
+                      });
+                 } 
+                }, 100);
+                            
+		
+                      }
+                    });
+
+            });
+        });
+  
+  var div2 = document.querySelector('body');
+	
+	
+		mlveda_observer.observe(document, { childList: true , subtree : true});
+ 
+  
+  window.addEventListener("load" ,function(){
+    setTimeout(function(){
+         $m("<style type=\"text/css\">span.money{ display: inline; }</style>").appendTo("head");
+    	 $m("<style type=\"text/css\">  div.mlvedaform span.money {visibility:visible;}</style>").appendTo("head");
+         $m("<style type=\"text/css\">  form[action*='/cart/add'] [type='submit'] {visibility:visible;}</style>").appendTo("head");
+    },2000);
+  });
+  </script>

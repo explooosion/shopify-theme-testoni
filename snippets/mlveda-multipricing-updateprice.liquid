@@ -1,0 +1,297 @@
+{{ 'option_selection.js' | shopify_asset_url | script_tag }}
+<script>
+  // MLveda.formatMoney
+"undefined"==typeof Mlveda&&(Mlveda={}),Mlveda.formatMoney||(Mlveda.formatMoney=function(a,e){function t(a,e){return void 0===a?e:a}function r(a,e,r,o){if(e=t(e,2),r=t(r,","),o=t(o,"."),isNaN(a)||null==a)return 0;var n=(a=(a/100).toFixed(e)).split(".");return n[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g,"$1"+r)+(n[1]?o+n[1]:"")}"string"==typeof a&&(a=a.replace(".",""));var o="",n=/\{\{\s*(\w+)\s*\}\}/,s=e||"$ {{ amount }}";switch(s.match(n)[1]){case"amount":o=r(a,2);break;case"amount_no_decimals":o=r(a,0);break;case"amount_with_comma_separator":o=r(a,2,".",",");break;case"amount_with_space_separator":o=r(a,2," ",",");break;case"amount_with_period_and_space_separator":o=r(a,2," ",".");break;case"amount_no_decimals_with_comma_separator":o=r(a,0,".",",");break;case"amount_no_decimals_with_space_separator":o=r(a,0," ");break;case"amount_with_apostrophe_separator":o=r(a,2,"'",".")}return s.replace(n,o)}); 
+
+  window.mlvedaFlagCalled = false;
+                
+var Fromregex = /[f|F]rom/g;
+function removeFrom(){ 
+ var spanmoneyelement = document.querySelectorAll("span.money");
+  for(var i=0; i<spanmoneyelement.length; i++){
+	var fromelement = spanmoneyelement[i].parentNode;
+    if(fromelement != null && !(Fromregex.test(fromelement.innerHTML))){
+       fromelement = fromelement.parentNode;
+     }	
+    if(fromelement != null){
+    var frommatch = fromelement.innerHTML.match(Fromregex);
+    if(frommatch != null){
+    fromelement.innerHTML = fromelement.innerHTML.replace(Fromregex,"");
+	//console.log(fromelement.innerHTML)
+    }
+  }
+  }
+};
+
+var mlvedaCallUrl = "//www.mlveda.com/ShopifyApps/ShopifyMultiPricing/getPrices?shop={{ shop.permanent_domain }}"
+function checkShopifyFormatMoney() {
+var data = [];
+var mlvedaData = {};
+  
+	  $m.fn.removeAttributes = function() {
+  return this.each(function() {
+    var attributes = $m.map(this.attributes, function(item) {
+      return item.name;
+    });
+    var span = $m(this);
+    $m.each(attributes, function(i, item) {
+    span.removeAttr(item);
+    });
+  });
+}
+
+  
+var dataSet = [];
+ 
+$m("a").each(function() {
+  
+  if($m(this).attr("href") && $m(this).attr("href").replace(/\?.*/,"").toString().indexOf("/products/") != -1){
+    var $mhandleArray = $m(this).attr('href').split("/");
+    var $mhandle = $mhandleArray[$mhandleArray.length - 1].split("\?")[0];
+    
+   dataSet.push($m(this).attr('href').split("\?")[0]);
+  }
+});
+  
+  uniqueArray = dataSet.filter(function(item, pos) {
+    return dataSet.indexOf(item) == pos;
+  })
+  
+
+  
+  for (var item = 0 ; item < uniqueArray.length ; item++) {
+
+    if(uniqueArray[item].indexOf(".jpeg") == -1 && uniqueArray[item].indexOf(".jpg") == -1 && uniqueArray[item].indexOf(".png") == -1) {
+      data.push({"url": decodeURI(uniqueArray[item])});
+    }
+  }
+
+  removeFrom();
+
+mlvedaData = {"data": data};
+
+
+
+    var abcd = $m.ajax({
+        url: mlvedaCallUrl,
+        type: "POST",
+        dataType: "json",
+        timeout: 10000,
+        data: {data: JSON.stringify(mlvedaData)},
+        success: function(response) {
+            if (response === "") {
+                $m("<style type=\"text/css\">span.money { display: inline; }</style>").appendTo("head");
+                mlvedaFlagCalled = true;
+                if(typeof ACSCurrency !== "undefined" && typeof ACSCurrency.moneyFormats !== "undefined") {
+                  mlvedaload();
+                }
+            }
+            else {
+		$m('span.money span.money').each(function() {
+                                $m(this).parents('span.money').removeClass('money');
+                });
+                $m.each(response.data, function(index, element) {
+                  if(element.url.indexOf("view=quick") == -1){
+                    $m("a").each(function() {
+                      if($m(this).attr("href") && $m(this).attr("href").replace(/\?.*/,"") === encodeURI(element.url)){
+                        if (element.variantId)
+                        {
+                            $m(this).attr("href", element.url + "?variant=" + element.variantId);
+                        }
+                        
+                        $mmlvedamoney = $m(this).find(".money");
+                        if(!($mmlvedamoney.html())){
+                              $mmlvedamoney = $m(this).parent().find(".money");
+                              /*if (!($mmlvedamoney.html()))
+                              {
+                                  $mmlvedamoney = $m(this).parent().parent().find(".money");
+                              }*/
+                        }
+                        
+                        if (element.price && $mmlvedamoney.html() && $m(this).parent().parent().find(".ShopTheLook__ProductList").length == 0)
+                        {
+                          var $mfirstMlvedamoney = null;
+                          var $msecondMlvedamoney = null;
+                          $mmlvedamoney.each(function() {
+                            if($mfirstMlvedamoney == null) {
+                              $mfirstMlvedamoney = $m(this);
+                            }
+                            else if($msecondMlvedamoney == null ) {
+                              $msecondMlvedamoney = $m(this);//parseInt($m(this).html().replace(/[^0-9]/g, ""),10);
+                            }
+                            else {                              
+                              return false;//parseInt($m(this).html().replace(/[^0-9]/g, ""),10)                              
+                            }                           
+                            
+                          });
+                          
+                        
+                      
+                        if($msecondMlvedamoney == null) {
+                          $mfirstMlvedamoney.html(Mlveda.formatMoney(element.price, "{{ shop.money_format | strip_html }}"));
+
+						  $mfirstMlvedamoney.removeAttributes();
+						  $mfirstMlvedamoney.addClass("money");
+                                                                      
+                          if("undefined" != typeof element.compare_at_price){
+                               //$m(this).parent().find(".grid-product__on-sale").html("<p>Save<br>"+ Mlveda.formatMoney((element.compare_at_price - element.price).toFixed(2), '{{ shop.money_format  }}') +"</p>")
+                          }
+                          else{
+                                     $mfirstMlvedamoney.css("color","#000");
+                                
+                                $m(this).parent().find(".ProductItem__LabelList:contains(sale)").remove();
+                          }
+                        }
+                        else {                        var currentPrice = parseInt($msecondMlvedamoney.html().replace(/[^0-9]/g, ""),10);
+                        var previousPrice = parseInt($mfirstMlvedamoney.html().replace(/[^0-9]/g, ""),10);
+                            if ( currentPrice >= previousPrice ) {
+                              if(!(element.compare_at_price) || parseInt(element.compare_at_price) <= parseInt(element.price)) {
+                                $mfirstMlvedamoney.html(Mlveda.formatMoney(element.price, "{{ shop.money_format | strip_html }}"));
+                                $msecondMlvedamoney.html("");
+                                                        
+                                $mfirstMlvedamoney.removeAttributes();
+						  		$mfirstMlvedamoney.addClass("money");
+                                                        
+								$msecondMlvedamoney.removeClass("money"); 
+                                $mfirstMlvedamoney.css("color","#000");
+                                
+                                $m(this).parent().find(".ProductItem__LabelList:contains(sale)").remove();
+								$msecondMlvedamoney.parent().removeClass("Price--compareAt");
+                              } else {
+                                $msecondMlvedamoney.html(Mlveda.formatMoney(element.compare_at_price, "{{ shop.money_format | strip_html }}"));
+                                $mfirstMlvedamoney.html(Mlveda.formatMoney(element.price, "{{ shop.money_format  | strip_html }}"));
+                                                                             
+								$msecondMlvedamoney.removeAttributes();
+						  		$msecondMlvedamoney.addClass("money");
+                                
+                                $mfirstMlvedamoney.removeAttributes();
+						  		$mfirstMlvedamoney.addClass("money");
+                                                                             
+                              }
+                              }
+                              else if( currentPrice < previousPrice ){
+                                if(!(element.compare_at_price) || parseInt(element.compare_at_price) <= parseInt(element.price)) {
+                                  $msecondMlvedamoney.html(Mlveda.formatMoney(element.price, "{{ shop.money_format  | strip_html }}"));
+                                  $mfirstMlvedamoney.html("");
+                                                           
+                                  $msecondMlvedamoney.removeAttributes();
+						  		  $msecondMlvedamoney.addClass("money");
+                                                           
+								  $mfirstMlvedamoney.removeClass("money");
+                                  $msecondMlvedamoney.css("color","#000");
+                                  
+                                  $m(this).parent().find(".ProductItem__LabelList:contains(sale)").remove();
+								  $mfirstMlvedamoney.parent().removeClass("Price--compareAt");
+                                } else {
+                                  $mfirstMlvedamoney.html(Mlveda.formatMoney(element.compare_at_price, "{{ shop.money_format | strip_html }}"));
+                                  $msecondMlvedamoney.html(Mlveda.formatMoney(element.price, "{{ shop.money_format | strip_html }}"));
+
+								  $mfirstMlvedamoney.removeAttributes();
+						  		  $mfirstMlvedamoney.addClass("money");
+                                  
+                                  $msecondMlvedamoney.removeAttributes();
+						  		  $msecondMlvedamoney.addClass("money");
+                                                                              
+                                }
+                              }
+                              
+                             }
+                        }
+					  }                                            
+                    });
+                            }
+                });
+                              
+                //$m("<style type=\"text/css\">span.money{ display: inline; }</style>").appendTo("head");
+                mlvedaFlagCalled = true;
+                if(typeof ACSCurrency !== "undefined" && typeof ACSCurrency.moneyFormats !== "undefined") {
+                  mlvedaload();
+                }          
+            }
+                      //mlvedaload();
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            $m("<style type=\"text/css\">span.money{ display: inline; }</style>").appendTo("head");
+            mlvedaFlagCalled = true;
+                if(typeof ACSCurrency !== "undefined" && typeof ACSCurrency.moneyFormats !== "undefined") {
+                  mlvedaload();
+                }          
+        }
+    });
+}
+
+checkShopifyFormatMoney();
+
+                          
+                          (function () {
+
+   {% if shop.enabled_currencies.size > 1 %}
+ 
+
+	const open = XMLHttpRequest.prototype.open;
+XMLHttpRequest.prototype.open = function(){
+	var url_before_ajax = arguments;
+    if("undefined"!= typeof url_before_ajax &&(url_before_ajax[1].indexOf("getWishlist") != -1)){
+	
+     if(url_before_ajax[1].indexOf("&") != -1 || url_before_ajax[1].indexOf("?") != -1){
+                            	 url_before_ajax[1] = url_before_ajax[1] + "&currency="+mlvedaShopCurrency;
+            	   }
+  	else {
+                            	   url_before_ajax[1] = url_before_ajax[1] + "?currency="+mlvedaShopCurrency;
+                            	 }
+            	 }  	
+	return open.apply(this,arguments);
+  }
+
+ 	{% endif %}
+
+                            
+    const send = XMLHttpRequest.prototype.send;
+    XMLHttpRequest.prototype.send = function() { 
+        this.addEventListener('load', function() {
+            //console.log('global handler', this)
+            if("undefined" != typeof this._url && (this._url.indexOf("?page=")!=-1 || this._url.indexOf("search?")!=-1 || this._url.indexOf("view=")!=-1 || this._url.indexOf("recommendations/")!=-1 || this._url.indexOf("get_product_page_recommendation")!=-1 || this._url.indexOf("getWishlist")!=-1 )) {
+       $m("<style type=\"text/css\">span.money{ display: none; }</style>").appendTo("head");
+         checkShopifyFormatMoney();
+     }
+            
+        })
+        return send.apply(this, arguments)
+    }
+    
+    const fetch = window.fetch;
+    window.fetch = function(){
+      var e = arguments;
+      
+      {% if shop.enabled_currencies.size > 1 %}
+      if(e[0].indexOf("checkouts.json")!=-1){
+    	var newBODY = {...JSON.parse(e[1].body)};
+        if(newBODY.checkout.presentment_currency != ACSCurrency.currentCurrency){
+    	   	newBODY.checkout.presentment_currency = ACSCurrency.currentCurrency;
+    	}
+        arguments[1].body = JSON.stringify(newBODY);
+  	  }
+      {% endif %}
+      
+      return fetch.apply(this, Array.prototype.slice.call(arguments)).then(function(t) {
+          if (!t.ok)
+              return t;
+          try {
+             if("undefined" != typeof t.url && (t.url.indexOf("?page=")!=-1 || t.url.indexOf("search?")!=-1 || t.url.indexOf("view=")!=-1 || t.url.indexOf("type=")!=-1 || t.url.indexOf("recommendations/")!=-1 || t.url.indexOf("get_product_page_recommendation")!=-1 )) {
+               setTimeout(function(){
+               	$m("<style type=\"text/css\">span.money{ display: none; }</style>").appendTo("head");
+                 checkShopifyFormatMoney();
+               },300);
+             }
+          } catch (e) {
+              console && console.warn && console.warn("[shop_events_listener] Error in handleFetchRequest:  " + e.message);
+          }
+          return t
+      })
+    }
+})();
+
+                          
+
+
+</script>

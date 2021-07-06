@@ -1,0 +1,65 @@
+<script type="text/javascript">
+  (function() {
+    window.ORDERSIFY_BIS = window.ORDERSIFY_BIS || {};
+    window.ORDERSIFY_BIS.is_custom_event = true;
+
+    function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+    
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+    
+            if (sParameterName[0] === sParam) {
+                return typeof sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+        return false;
+    };
+
+    function hItg() {
+        setTimeout(function() {
+            const variantId = getUrlParameter('variant');
+            const ORDERSIFY_BIS = window.ORDERSIFY_BIS;
+            if(ORDERSIFY_BIS.product) {
+                ORDERSIFY_BIS.product.variants.map(function(variant_product) {
+                    if (String(variant_product.id) === String(variantId)) {
+                        if (window.ORDERSIFY_BIS.setCurrentVariantId) {
+                            window.ORDERSIFY_BIS.setCurrentVariantId(variant_product.id);
+                        }
+                        if (window.ORDERSIFY_BIS.setIsProductAvailable) {
+                            window.ORDERSIFY_BIS.setIsProductAvailable(variant_product.available);
+                        }
+                        if (window.ORDERSIFY_BIS.setCurrentVariantIdForStockRemaining) {
+                            window.ORDERSIFY_BIS.setCurrentVariantIdForStockRemaining(variant_product.id);
+                        }
+                    }
+                });
+            }
+        }, 500);
+    }
+
+    function bisItg() {
+        var $ = window.jQuery;
+        $(document).ready(function() {
+            hItg();
+            $('form[action*="/cart/add"]').change(hItg);
+        });
+    }
+
+    if (typeof jQuery == 'undefined') {
+        var script = document.createElement('SCRIPT');
+        script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js';
+        script.type = 'text/javascript';
+        script.async = true;
+        script.onload = function() {
+            bisItg();
+        }
+        document.getElementsByTagName('head')[0].appendChild(script);
+    } else {
+        bisItg();
+    }
+  })();
+</script>

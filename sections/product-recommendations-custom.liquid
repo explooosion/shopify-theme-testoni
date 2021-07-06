@@ -1,0 +1,111 @@
+{%- capture section_settings -%}
+{
+  "productId": {{ product.id | json }},
+}
+{%- endcapture -%}
+
+{%- capture flickity_options -%}
+{
+  "prevNextButtons": true,
+  "pageDots": false,
+  "wrapAround": false,
+  "contain": true,
+  "cellAlign": "center",
+  "watchCSS": true,
+  "dragThreshold": 8,
+  "groupCells": true,
+  "arrowShape": {"x0": 20, "x1": 60, "y1": 40, "x2": 60, "y2": 35, "x3": 25}
+}
+{%- endcapture -%}
+{% if product.tags contains 'women' %}
+	{% assign currentProTag = 'women' %}
+{% else if product.tags contains 'men' %}
+	{% assign currentProTag = 'men' %}
+{% endif %}
+{% assign productIDC = product.id %}
+
+{% assign collectionHandle = product.collections.first.handle %}
+
+{%- if section.settings.show_product_recommendations -%}
+ <section class="Section Section--spacingNormal" data-section-id="{{ section.id }}"  data-section-settings='{{ section_settings }}'>
+    {%- if section.settings.heading != blank -%}
+      <header class="SectionHeader SectionHeader--center">
+         <h3 class="SectionHeader__Heading Heading u-h3">{{ section.settings.heading | escape }}</h3>
+      </header>
+    {%- endif -%}
+	
+   {% assign relatedCollection = collections[collectionHandle] %}
+	{% assign index = 'now' | date: '%S' %}
+	{% assign index = index | times: relatedCollection.products.size %}
+	{% assign index = index | divided_by: 60 %}
+   
+   <div class="ProductListWrapper">
+        <div class="ProductList ProductList--carousel Carousel" data-flickity-config='{{ flickity_options }}'>
+          {% assign i = 1 %}
+			
+           {%- for product in collections[collectionHandle].products reversed offset:index limit: 50-%}
+          		{% if product.id == productIDC %}
+          			{% continue %}
+          		{% endif %}
+          		{% if product.tags contains currentProTag %}
+          		{% if i > 4%}
+          			{% break %}
+          		{% endif %}
+          		
+            	<div class="Carousel__Cell" data-count="{{ i }}" style="display:block; float:left;">
+              		{% render 'product-item-recommend', product: product, show_product_info: section.settings.show_product_info, show_vendor: section.settings.show_vendor, show_color_swatch: section.settings.show_color_swatch, show_labels: true %}
+             	</div>
+          		{% assign i =  i | plus: 1 %}
+          	{% endif %}
+          {%- endfor -%}
+	
+     </div>
+   </div>
+  
+  </section>
+{%- endif -%}
+<style>
+#product-recommendations-custom .Carousel .Carousel__Cell{
+	display:block;
+	float:left;
+}
+</style>
+{% schema %}
+{
+  "name": "Product recommendations",
+  "class": "shopify-section--bordered",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_product_recommendations",
+      "label": "Show recommendations",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "You may also like"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_info",
+      "label": "Show product info",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_color_swatch",
+      "label": "Show color swatch",
+      "info": "Some colors appear white? [Learn more](http://support.maestrooo.com/article/80-product-uploading-custom-color-for-color-swatch).",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

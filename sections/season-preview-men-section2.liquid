@@ -1,0 +1,57 @@
+{% if section.settings.enable_second_section %}
+<div class="season-hl-product">
+  <div class="season-hl-media">
+    {%- if section.settings.productimage -%}
+    <a href="{{ section.settings.linktext }}"><img src="{{ section.settings.productimage | img_url: 'master' }} [(max-width: 640px)] | {{ block.settings.productimage | img_url: 'master' }}" alt="no image"></a>
+    {%- endif -%}
+  </div>
+  <div class="season-hl-content">
+    <h2>{{ section.settings.title }} </h2>
+    <div class="season-hl-description">
+      <p> {{ section.settings.description }} </p>
+    </div>    
+  </div>
+
+</div>
+
+{% endif %}
+{% schema %}
+  {
+    "name": "Season Preview Section 2",
+    "settings": [
+		{
+          "type": "checkbox",
+          "id": "enable_second_section",
+          "label": "Show section",
+          "default": true
+        },
+    {
+      "type": "image_picker",
+      "id": "productimage",
+      "label": "Product Image"
+    },
+     {
+      "type": "text",
+      "id": "title",
+      "label": "Main Title"    
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "We are at your disposal with a tailored customer care service. For any information you may need, questions or requests don’t hesitate to write or call us!"
+    },
+     {
+        "type": "url",
+        "id": "linktext",
+        "label": "Product to link"
+      }  
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

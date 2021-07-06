@@ -1,0 +1,38 @@
+<header class="inner-PageHeader">
+  <div class="inner-SectionHeader" style="background-image:url({{ section.settings.mencollectionbanner | img_url:'1024x'}});">
+   <h1 class="inner-SectionHeader__Heading" style="color:{{ section.settings.font-color}};">
+          {%- if template == 'men-list-collections' -%}
+            {{- 'collection_list.general.title' | t -}}
+          {%- else -%}
+     		{{- 'collection_list.men.title' | t -}}
+          {%- endif -%}
+        </h1>
+  </div>
+</header>
+{% schema %}
+  {
+    "name": "Men Collections Header",
+    "settings": [
+ 		{
+           "type": "header",
+           "content": "Banner"
+        },
+		{
+          "type": "image_picker",
+          "id": "mencollectionbanner",
+          "label": "Image"
+        },
+        {
+           "type": "header",
+           "content": "Title"
+        },
+		{
+            "type": "color",
+            "id": "font-color",
+            "default": "#fffefe",
+            "label": "Font Color"
+        }
+	]
+  }
+
+{% endschema %}

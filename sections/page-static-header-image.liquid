@@ -1,0 +1,17 @@
+<header class="inner-PageHeader">
+  <div class="inner-SectionHeader" style="background-image:url({{ section.settings.bglogo | img_url:'1024x'}});">
+    <h1 class="inner-SectionHeader__Heading">{{ page.title }}</h1>
+  </div>
+</header>
+{% schema %}
+  {
+    "name": "Header Image",
+    "settings": [
+		{
+          "type": "image_picker",
+          "id": "bglogo",
+          "label": "Banner image"
+        }
+	]
+  }
+{% endschema %}

@@ -1,0 +1,23 @@
+<header class="inner-PageHeader">
+  <div class="inner-SectionHeader" style="background-image:url({{ section.settings.collectionbanner | img_url:'1024x'}});">
+   <h1 class="inner-SectionHeader__Heading">
+          {%- if template == 'list-collections' -%}
+            {{- 'collection_list.general.title' | t -}}
+          {%- else -%}
+            {{- page.title -}}
+          {%- endif -%}
+        </h1>
+  </div>
+</header>
+{% schema %}
+  {
+    "name": "Collections Image",
+    "settings": [
+		{
+          "type": "image_picker",
+          "id": "collectionbanner",
+          "label": "Banner image"
+        }
+	]
+  }
+{% endschema %}

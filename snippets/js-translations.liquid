@@ -1,0 +1,77 @@
+<script>
+  var translated = [];
+
+  var getTranslationFor = function(key) {
+    
+    {%- capture customs -%}{%- render 'ly-get-customs' -%}{%- endcapture -%}
+    {%- assign customs = customs | split : '[ly_custom]' -%}
+
+    {% for custom in customs %}
+    {%- assign used_custom = custom | split: '[ly_custom_split]' -%}
+    {%- assign src = used_custom | first -%}
+    {% assign src = src | replace: '"', 'ly_dq' %}
+    {% assign src = src | replace: "'", 'ly_sq' %}
+    {% assign src = '#ly_cu' | append: src %}
+    {%- assign dst = used_custom | last -%}
+    {%- if dst -%}
+        if(key.replace('"', 'ly_dq').replace("'", 'ly_sq').trim() == '{{ src | strip_newlines }}') {
+       return '{{ dst | replace: "\", "\\\" | replace: "'", "\\'" | strip_newlines }}';
+    }
+    {%- endif -%}
+    {% endfor %}
+       
+    return key;
+  };
+
+  var translateHtml = function(id, replace) {
+  	var element = $(id);
+    var content = element.html();
+    if(content) {
+      var translation = getTranslationFor(content);
+      if(content != translation) {
+        element.html(translation);
+      }
+    }
+  }
+
+  var translatePlaceholder = function(id) {
+  	var element = $(id);
+    var content = element.attr('placeholder');
+    if(content) {
+      var translation = getTranslationFor(content);
+      if(content != translation) {
+        element.attr('placeholder', translation);
+      }
+    }
+  }
+
+  var translateValue = function(id) {
+  	var element = $(id);
+    var content = element.val();
+    if(content) {
+      var translation = getTranslationFor(content);
+      if(content != translation) {
+        element.val(translation);
+      }
+    }
+  }
+  
+  $(function() {
+    $('body').bind('DOMSubtreeModified', function() {
+     translateHtml ('.getdirectionstore');
+      
+       var elements = $('input[type="text"]');
+      for(var i = 0; i < elements.length; i++) {
+        var element = $(elements[i]);
+        var content = element.attr('placeholder');
+        if(content) {
+          var translation = getTranslationFor(content);
+          if(content != translation) {
+            element.attr('placeholder', translation);
+          }
+        }
+      }
+
+    });
+  });
+</script>

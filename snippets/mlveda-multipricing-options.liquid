@@ -1,0 +1,52 @@
+		<script>
+		  $m("<style type='text/css'>span.money{ display: none; }</style>").appendTo("head");
+          
+          {% if template contains 'product' or template == 'index' %}
+            $m("<style type='text/css'>form[action*='/cart/add'] [type='submit']{visibility : hidden;}</style>").appendTo("head");
+          {% endif %}
+          
+		</script>
+
+
+<script>
+window.mlvedaShopCurrency = "{{ shop.currency }}";
+window.shopCurrency = "{{ shop.currency }}";
+window.supported_currencies = "{{ settings.mlvedaACS_supportedCurrencies }}";
+</script>
+  
+{% if shop.enabled_currencies.size > 1 %}
+  <script>
+window.shopify_supported_currencies = "";
+{% for currency in shop.enabled_currencies %}
+   shopify_supported_currencies = shopify_supported_currencies + "{{ currency.iso_code }} ";
+{% endfor %}
+</script>
+{% if cart.currency.iso_code != shop.currency and template != 'cart' and template != 'customers/account' %}
+ <script>
+   if(!Shopify.designMode){
+  window.location.href = "/cart/update?currency={{ shop.currency }}&return_to="+(location.pathname+location.search);
+   }
+ </script>
+ {% endif %}
+{% if template == "cart" %}
+ <script>
+   function mlvedaReadCookie(name) {
+   var nameEQ = name + "=";
+   var ca = document.cookie.split(';');
+   for (var i = 0; i < ca.length; i++) {
+       var c = ca[i];
+       while (c.charAt(0) == ' ')
+           c = c.substring(1, c.length);
+       if (c.indexOf(nameEQ) == 0)
+           return c.substring(nameEQ.length, c.length);
+   }
+   return null;
+   }
+   if( mlvedaReadCookie("acscurrency") !== "{{ cart.currency.iso_code }}" && shopify_supported_currencies.indexOf(mlvedaReadCookie("acscurrency")) != -1) {
+      if(!Shopify.designMode){
+      window.location.href = "/cart/update?currency="+mlvedaReadCookie("acscurrency")+"&return_to="+(location.pathname+location.search);
+   }
+   }
+   </script>
+ {% endif %}
+{% endif %}

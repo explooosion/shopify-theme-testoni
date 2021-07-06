@@ -1,0 +1,202 @@
+<section id="section-{{ section.id }}" class="Section Section--spacingNormal" data-section-id="{{ section.id }}" data-section-type="timeline">
+  <div class="Container">
+    <div class="Timeline">      
+      {% if section.settings.text_line != blank %}
+      <div class="timeline-heading-line"><h3>{{section.settings.text_line}}</h3>        
+      </div>
+      {% endif %}      
+      <div class="Timeline__ListItem">
+        {%- for block in section.blocks -%}
+          <div {{ block.shopify_attributes }} class="Timeline__Item {% if forloop.first %}is-selected{% endif %}" data-index="{{ forloop.index0 }}">
+            <div class="Timeline__ImageWrapper {% if block.settings.apply_overlay %}Image--contrast{% endif %}" {% if block.settings.image %}style="background: url({{ block.settings.image | img_url: '1x1' }})"{% endif %}>
+              {%- if block.settings.image -%}
+                <div class="Timeline__Image Image--lazyLoad hide-no-js" data-bgset="{{ block.settings.image | img_url: 'x650' }} [(max-width: 640px)] | {{ block.settings.image | img_url: '1000x' }}"></div>
+
+                <noscript>
+                  <div class="Timeline__Image" style="background-image: url({{ block.settings.image | img_url: '1000x' }})"></div>
+                </noscript>
+              {%- else -%}
+                <div class="Timeline__Image">
+                  <div class="PlaceholderBackground">
+                    {%- capture placeholder -%}{% cycle 'lifestyle-1', 'lifestyle-2' %}{%- endcapture -%}
+                    {{ placeholder | placeholder_svg_tag: 'PlaceholderBackground__Svg PlaceholderSvg--dark' }}
+                  </div>
+                </div>
+              {%- endif -%}
+            </div>
+            {%- capture section_inner -%}
+              {%- if block.settings.subheading != blank or block.settings.heading != blank -%}
+           
+                <header class="Timeline__Header SectionHeader SectionHeader--center">
+                  {%- if block.settings.subheading != blank -%}
+                    <h3 class="SectionHeader__SubHeading Heading u-h6">{{ block.settings.subheading | escape }}</h3>
+                  {%- endif -%}
+
+                  {%- if block.settings.heading != blank -%}
+                    <h2 class="SectionHeader__Heading Heading u-h1">
+                      <a href="{{ section.settings.pagelink | escape }}"> {{ block.settings.heading | escape }}</a></h2>
+                  {%- endif -%}
+
+                  {%- if block.settings.content != blank -%}
+                    <div class="SectionHeader__Description Rte">
+                      {{ block.settings.content }}
+                    </div>
+                  {%- endif -%}
+                </header>
+             
+              {%- endif -%}
+            {%- endcapture -%}
+			
+            {% comment %}
+            {%- if section_inner -%}
+              <div class="Timeline__Inner">
+                {{ section_inner }}
+              </div>            
+            {%- endif -%}
+            {% endcomment %}
+            
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {% comment %}
+      {%- if section.blocks.size >= 2 -%}
+        <div class="Timeline__Nav">
+          <div class="Timeline__NavWrapper {% if section.blocks.size <= 3 %}Timeline__NavWrapper--center{% endif %}">
+            {%- for block in section.blocks -%}
+              <button type="button" class="Timeline__NavItem {% if forloop.first %}is-selected{% endif %} Link Link--primary" data-index="{{ forloop.index0 }}">
+                <span class="Timeline__NavLabel">{{ block.settings.title | truncate: 20 | escape }}</span>
+              </button>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+      {% endcomment %}
+      
+      <div class="Timeline__Nav">
+          <div class="Timeline__NavWrapper {% if section.blocks.size <= 3 %}Timeline__NavWrapper--center{% endif %}">
+            {%- if section.blocks.size >= 2 -%}
+              <button class="btn Timeline__NavItem opacity" id="nav-pre-next" type="button" data-index="0">Back</button>
+              <button class="btn Timeline__NavItem" id="nav-next-pre" type="button" data-index="0">Next</button>
+               {%- endif -%}
+        </div>
+        
+       
+        
+        {%- if section.settings.footer-text != blank -%}
+        <div class="foooter-textarea">
+         <a href="{{ section.settings.pagelink | escape }}"> {{section.settings.footer-text}}</a>
+        </div>
+        {% endif %}
+      </div>      
+    </div>
+  </div>
+</section>
+
+<style>
+  #section-{{ section.id }} .Timeline__ListItem {
+    color: {{ section.settings.text_color }};
+  }
+   .opacity{
+  	opacity:0.3;
+  }
+</style>
+<script type="text/javascript">
+  if(document.getElementById("nav-pre-next") && document.getElementById("nav-next-pre")){
+    const totalSize = {{section.blocks.size}};  
+    document.getElementById("nav-pre-next").addEventListener("click",function(){
+      let dataN = document.getElementById("nav-next-pre").getAttribute("data-index");
+      if(dataN <= 0){
+        document.getElementById("nav-pre-next").setAttribute("data-index","0");
+        document.getElementById("nav-next-pre").setAttribute("data-index","0");
+      }else{
+        document.getElementById("nav-pre-next").setAttribute("data-index",parseInt(dataN)-1);
+        document.getElementById("nav-next-pre").setAttribute("data-index",parseInt(dataN)-1);
+        document.getElementById("nav-next-pre").classList.remove('opacity');
+      }	
+      if(dataN <=1){
+        document.getElementById("nav-pre-next").classList.add('opacity');
+      }
+    });
+
+    document.getElementById("nav-next-pre").addEventListener("click", function(){
+      let dataP = document.getElementById("nav-next-pre").getAttribute("data-index");
+      if(dataP >= {{section.blocks.size | minus: 1 }} ){
+        document.getElementById("nav-next-pre").setAttribute("data-index",parseInt(dataP));
+        document.getElementById("nav-pre-next").setAttribute("data-index",parseInt(dataP));
+      }else{
+        document.getElementById("nav-next-pre").setAttribute("data-index",parseInt(dataP)+1);
+        document.getElementById("nav-pre-next").setAttribute("data-index",parseInt(dataP)+1);
+        document.getElementById("nav-pre-next").classList.remove('opacity');
+      }
+      if(dataP >= {{section.blocks.size | minus: 2 }} ){
+        document.getElementById("nav-next-pre").classList.add('opacity');
+      }
+    });
+  }
+</script>
+{% schema %}
+{
+  "name": "Timeline",
+  "class": "shopify-section--bordered shopify-section--timeline",
+  "settings": [
+	{
+      	"type": "text",
+      	"id": "text_line",
+      	"label": "Heading line",
+		"default": "Our Timeline",
+		"info": "Heading line of section."
+    },
+	{
+          "type": "text",
+          "id": "footer-text",
+          "label": "Footer Text",
+          "default": "Footer Text"
+    },       
+        {
+          "type": "url",
+          "id": "pagelink",
+          "label": "Page Link"
+        },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Mobile text color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "1200 x 1200px .jpg recommended"
+        },
+        {
+          "type": "checkbox",
+          "id": "apply_overlay",
+          "label": "Apply overlay on image",
+          "info": "Only applied on mobile. This can improve text visibility.",
+          "default": true
+        },       
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Text",
+          "default": "<p>Add your own custom content to give more information about your store, availability details...</p>"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

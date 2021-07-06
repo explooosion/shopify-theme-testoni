@@ -1,0 +1,52 @@
+<div class="Container">
+	{% render 'breadcrumbs' %}
+    <div class="PageContent" style="visibility:hidden" id="store-location-frame">
+      	{{- page.content -}}
+    </div>
+</div>
+<script>
+function showIt2() {
+  document.getElementById("store-location-frame").style.visibility="visible";
+    console.log("teewewewewewe");
+}
+setTimeout("showIt2()", 2000); 
+  
+</script>
+{% schema %}
+{
+  "name": "Store Locations",  
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text Field",
+      "settings": [
+        {
+           "type": "text",
+           "id": "country",
+           "label": "Country",
+           "default": "Heading"
+        },
+        {
+           "type": "text",
+           "id": "city",
+           "label": "City/Area",
+           "default": "Sub Heading"
+        },
+        {
+           "type": "textarea",
+           "id": "store-location-address",
+           "label": "Address of Store Location",
+           "default": "Dummy Address"
+        },
+        {
+           "type": "text",
+           "id": "contact-email",
+           "label": "Email of contact",
+           "default": "test@example.com"
+        }
+      ]
+    }
+  
+  ]
+}
+{% endschema %}

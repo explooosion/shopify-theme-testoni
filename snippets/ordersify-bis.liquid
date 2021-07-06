@@ -1,0 +1,115 @@
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+<style type="text/css">
+  .osf_input--error{border-color:#000000 !important;}
+.osf_error_span{color:#000000 !important}
+</style>
+<style type="text/css">
+    
+</style>
+<script type="text/javascript">
+  window.ORDERSIFY_BIS = window.ORDERSIFY_BIS || {};
+  window.ORDERSIFY_BIS.template = "{{ template }}";
+  window.ORDERSIFY_BIS.language = "{{ request.locale.iso_code }}";
+  window.ORDERSIFY_BIS.primary_language = "en";
+  window.ORDERSIFY_BIS.variant_inventory = [];
+  window.ORDERSIFY_BIS.product_collections = [];
+  {% for product_variant in product.variants %}
+    window.ORDERSIFY_BIS.variant_inventory[{{ product_variant.id }}] = {
+      inventory_management: "{{ product_variant.inventory_management }}",
+      inventory_policy: "{{ product_variant.inventory_policy }}",
+      inventory_quantity: {{ product_variant.inventory_quantity }}
+    };
+  {% endfor %}
+  {% for product_collection in product.collections %}
+    window.ORDERSIFY_BIS.product_collections.push({
+      id: "{{ product_collection.id }}",
+    });
+  {% endfor %}
+  window.ORDERSIFY_BIS.shop = "{{ shop.permanent_domain }}";
+  window.ORDERSIFY_BIS.variant_inventory = [];
+  {% for product_variant in product.variants %}
+    window.ORDERSIFY_BIS.variant_inventory[{{ product_variant.id }}] = {
+      inventory_management: "{{ product_variant.inventory_management }}",
+      inventory_policy: "{{ product_variant.inventory_policy }}",
+      inventory_quantity: {{ product_variant.inventory_quantity }}
+    };
+  {% endfor %}
+  {% if customer %}
+    window.ORDERSIFY_BIS.customer = {
+      email: "{{ customer.email }}",
+      name: "{{ customer.name }}",
+      id: {{ customer.id }}
+    };
+  {% endif %}
+  window.ORDERSIFY_BIS.popupSetting = {
+    "is_preorder": false,
+    "is_brand_mark": true,
+    "font_family": "Work Sans",
+    "is_multiple_language": false,
+    "font_size": 14,
+    "popup_border_radius": 4,
+    "popup_heading_color": "#212b36",
+    "popup_text_color": "#212b36",
+    "is_message_enable": false,
+    "is_sms_enable": false,
+    "is_accepts_marketing_enable": false,
+    "field_border_radius": 4,
+    "popup_button_color": "#ffffff",
+    "popup_button_bg_color": "#571210",
+    "is_float_button": false,
+    "is_inline_form": false,
+    "inline_form_selector": null,
+    "inline_form_position": null,
+    "float_button_position": "right",
+    "float_button_top": 15,
+    "float_button_color": "#ffffff",
+    "float_button_bg_color": "#571210",
+    "is_inline_button": true,
+    "inline_button_color": "#ffffff",
+    "inline_button_bg_color": "#571210",
+    "is_push_notification_enable": false,
+    "is_overlay_close": false,
+    "ignore_collection_ids": "",
+    "ignore_product_tags": "",
+    "ignore_product_ids": "",
+    "is_auto_translation": false,
+    "selector": ".notify-back-carrie",
+    "selector_position": "right",
+    "is_ga": false,
+    "is_fp": false,
+    "is_fb_checkbox": false,
+    "fb_page_id": null,
+    "is_pushowl": false
+};
+  window.ORDERSIFY_BIS.product = {{ product | json }};
+  window.ORDERSIFY_BIS.currentVariant = {{ current_variant | json }};
+  window.ORDERSIFY_BIS.stockRemainingSetting = {
+    "status": false,
+    "selector": "#osf_stock_remaining",
+    "selector_position": "inside",
+    "font_family": "Lato",
+    "font_size": 13,
+    "content": "{% raw %}Low stock! Only {{ quantity }} items left!{% endraw %}",
+    "display_quantity": 100
+};
+  {% raw %}
+    window.ORDERSIFY_BIS.translations = {
+    "en": {
+        "inline_button_text": "Notify when available",
+        "float_button_text": "Notify when available",
+        "popup_heading": "Notify me when available",
+        "popup_description": "We will send you a notification as soon as this product is available again.",
+        "popup_button_text": "Notify me",
+        "popup_note": "Your e-mail will be used only for the purpose of sending you this information.",
+        "field_email_placeholder": "eg. username@example.com",
+        "field_message_placeholder": "Tell something about your requirements to shop",
+        "success_text": "You subscribed notification successfully",
+        "required_email": "Your email is required",
+        "invalid_email": "Your email is invalid",
+        "invalid_message": "Your message must be less then 255 characters",
+        "push_notification_message": "Receive via web notification",
+        "low_stock_content": "Low stock! Only {{ quantity }} items left!"
+    }
+};
+  {% endraw %}
+</script>

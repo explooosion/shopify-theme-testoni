@@ -1,0 +1,142 @@
+<section class="Section vedio-section-history" id="section-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="owl-carousel">  
+  {% if section.settings.video_url_ext != blank %}	
+  	<div class="item">
+      <div class="video-outer">
+        {% comment %} poster="//cdn.shopify.com/s/files/1/0530/0889/2096/files/banner-slide1.jpg" {% endcomment %}
+      	<video muted playsInline autoplay loop style="max-width: 100%; width:100%;"><source src="{{ section.settings.video_url_ext }}" id="video_URL" type="video/mp4">Your browser does not support our video.</video>
+      </div>
+      <div class="video-desc">
+        <h2 class="video-title">{{section.settings.video_title_ext}}</h2>
+        <p>{{section.settings.video_desciption_ext}}</p>
+      </div>
+    </div>
+      {% endif %}
+  {% if section.settings.video_url_ext2 != blank %}
+  	<div class="item">
+      <div class="video-outer">
+    {% comment %} poster="//cdn.shopify.com/s/files/1/0530/0889/2096/files/banner-slide1.jpg" {% endcomment %}
+    <video muted playsInline autoplay loop style="max-width: 100%; width:100%;"><source src="{{ section.settings.video_url_ext2 }}" id="video_URL" type="video/mp4">Your browser does not support our video.</video>
+    </div>
+      <div class="video-desc">
+        <h2 class="video-title">{{section.settings.video_title_ext2}}</h2>
+        <p>{{section.settings.video_desciption_ext2}}</p>
+      </div>
+    </div>
+      {% endif %}
+  {% if section.settings.video_url_ext3 != blank %}
+  <div class="item">
+    <div class="video-outer">
+    {% comment %} poster="//cdn.shopify.com/s/files/1/0530/0889/2096/files/banner-slide1.jpg" {% endcomment %}
+    <video muted playsInline autoplay loop style="max-width: 100%;width:100%;"><source src="{{ section.settings.video_url_ext3 }}" id="video_URL" type="video/mp4">Your browser does not support our video.</video>
+     </div>
+      <div class="video-desc">
+        <h2 class="video-title">{{section.settings.video_title_ext3}}</h2>
+        <p>{{section.settings.video_desciption_ext3}}</p>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g==" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous"></script>
+<script type="text/javascript">
+  
+$(document).ready(function(){
+  $('.owl-carousel').owlCarousel({
+      loop:false,
+      margin:0,
+      nav:true,
+      dots:false,
+      responsive:{
+          0:{
+              items:1
+          },
+          600:{
+              items:1
+          },
+          1000:{
+              items:1
+          }
+      }
+  });
+  
+  updateContainer();
+  
+   /*$(window).resize(function() {
+        updateContainer();
+    });*/
+});
+
+  function updateContainer() {
+  		var videoHeight = $('#section-page-history-video .video-outer').height();
+  		console.log(videoHeight);
+   		$(".vedio-section-history .owl-carousel .owl-nav").css("top", videoHeight+41);
+  }
+
+</script>
+
+
+{% schema %}
+{
+  "name": "Background video",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Background videos are automatically muted to allow autoplay. If you require audio, use the \"Featured Video\" section."
+    },    
+    {
+      "type": "text",
+      "id": "video_url_ext",
+      "label": "Video URL 1"
+    },
+	{
+      "type": "text",
+      "id": "video_title_ext",
+      "label": "Video Title 1"
+    },
+	{
+      "type": "textarea",
+      "id": "video_desciption_ext",
+      "label": "Video Description 1"
+    },
+    {
+      "type": "text",
+      "id": "video_url_ext2",
+      "label": "Video URL 2"
+    },
+	{
+      "type": "text",
+      "id": "video_title_ext2",
+      "label": "Video Title 2"
+    },
+	{
+      "type": "textarea",
+      "id": "video_desciption_ext2",
+      "label": "Video Description 2"
+    },
+    {
+      "type": "text",
+      "id": "video_url_ext3",
+      "label": "Video URL 3"
+    },{
+      "type": "text",
+      "id": "video_title_ext3",
+      "label": "Video Title 3"
+    },
+	{
+      "type": "textarea",
+      "id": "video_desciption_ext3",
+      "label": "Video Description 3"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+.vedio-section-history{
+	padding:1% 0 5%;
+}
+{% endstylesheet %}

@@ -1,0 +1,13 @@
+<div class="mlvedaform">
+<div id="single-product-page">
+  {% section 'product-template' %}
+  {% section 'product-image-layer-section' %}
+  {% section 'product-recommendations-custom' %}
+  {% section 'recently-viewed-products' %}
+</div>
+
+<script>
+  window.ShopifyXR=window.ShopifyXR||function(){(ShopifyXR.q=ShopifyXR.q||[]).push(arguments)};
+  ShopifyXR('addModels', {{ product.media | where: 'media_type', 'model' | json }});
+</script>
+</div>

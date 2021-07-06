@@ -1,0 +1,266 @@
+<header class="inner-PageHeader">
+  <div class="inner-SectionHeader" style="background-image:url({{ section.settings.bgimage | img_url:'1024x'}});">
+    <h1 class="inner-SectionHeader__Heading">{{ page.title }}</h1>
+  </div>
+</header>
+
+<div class="contactus-page">
+  <div class="Container">
+    {% render 'breadcrumbs' %}
+
+    <div class="PageContent">
+      <div class="contactus-leftside">
+        
+        {%- if section.settings.contact-heading -%}
+        <div class="customize-heading">
+         {{section.settings.contact-heading}}
+        </div>
+        {%- endif -%}
+
+        {%- if section.settings.contact-subheading -%}
+        <div class="customize-subheading">
+         {{section.settings.contact-subheading}}
+        </div>
+        {%- endif -%}
+   
+        {%- if section.settings.contact-address -%}
+        <div class="customize-address">
+         {{section.settings.contact-address}}
+        </div>
+        {%- endif -%}
+        
+        {%- if section.settings.contact-phone -%}
+        <div class="customize-phone">
+         {{section.settings.contact-phone}}
+        </div>
+        {%- endif -%}
+        
+        {%- if section.settings.contact-email -%}
+        <div class="customize-email">
+         {{section.settings.contact-email}}
+        </div>
+        {%- endif -%}
+        
+        <section data-section-type="faq" data-section-id="{{ section.id }}" class="accordion-custom-style">
+            <h3>Showroom</h3>
+            <div class="Faq">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'text' -%}
+                {%- assign field_title = block.settings.accheading -%}
+
+                <div class="Faq__Item {% if section.blocks[forloop.index].type == 'separator' or forloop.last %}Faq__Item--lastOfSection{% endif %}" aria-expanded="false" {{ block.shopify_attributes }}>
+                 
+                  <div class="Faq__ItemWrapper">
+                    <button class="Faq__Question">{{ field_title | escape }} <span class="Faq__Icon">{% render 'icon' with 'select-arrow-right' %}</span></button>
+                    <div class="Faq__AnswerWrapper" aria-hidden="true">
+                      <div class="Faq__Answer Rte">
+                        {{ block.settings.accsubheading }} <br>
+                         
+                         {{ block.settings.phone }} <br>
+                        {%- if block.settings.fax != blank-%}                  
+                         {{ block.settings.fax }} <br>
+                        {%- endif -%}  
+                        {%- if block.settings.emailaddress != blank -%}                 
+                         {{ block.settings.emailaddress }} 
+                        {%- endif -%}  
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+        </section>
+        
+       </div>
+      
+      
+      <div class="contactus-rightside">
+        {{- page.content -}}
+    
+        
+        
+        {%- form 'contact', class: 'Form Form--spacingTight form-custom-style' -%}
+          {%- if form.posted_successfully? -%}
+            <p class="Alert Alert--success">{{ 'contact.form.successfully_sent' | t }}</p>
+          {%- endif -%}
+
+          {%- if form.errors -%}
+            <div class="Form__Alert Alert Alert--error">
+              <ul class="Alert__ErrorList">
+                {%- for field in form.errors -%}
+                  {%- if field == 'form' -%}
+                    <li class="Alert__ErrorItem">{{ form.errors.messages[field] }}</li>
+                  {%- else -%}
+                    <li class="Alert__ErrorItem"><strong>{{ form.errors.translated_fields[field] }}</strong> {{ form.errors.messages[field] }}</li>
+                  {%- endif -%}
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endif -%}
+
+            <div class="Form__Item">
+              <input type="text" class="Form__Input" name="contact[name]" aria-label="{{ 'contact.form.name' | t }}" placeholder="{{ 'contact.form.name' | t }}" required {% if customer %}value="{{ customer.name }}"{% endif %}>
+              <label class="Form__FloatingLabel">{{ 'contact.form.name' | t }}</label>
+            </div>
+            
+            <div class="Form__Item">
+              <input type="text" class="Form__Input" name="contact[surname]" aria-label="{{ 'contact.form.surname' | t }}" placeholder="{{ 'Surname' }}" required {% if customer %}value="{{ customer.title }}"{% endif %}>
+              <label class="Form__FloatingLabel">{{ 'contact.form.surname' | t }}</label>
+            </div>         
+
+            <div class="Form__Item">
+              <input type="email" class="Form__Input" name="contact[email]" aria-label="{{ 'contact.form.email' | t }}" placeholder="{{ 'contact.form.email' | t }}" required {% if customer %}value="{{ customer.email }}"{% endif %}>
+              <label class="Form__FloatingLabel">{{ 'contact.form.email' | t }}</label>
+            </div>
+      {% comment %}
+          {%- for block in section.blocks -%}
+            {%- assign field_title = block.settings.title -%}
+
+            {%- if field_title == blank -%}
+              {%- capture field_title -%}Custom field {% increment custom_field %}{%- endcapture -%}
+            {%- endif -%}
+
+            {%- if block.type == 'text' -%}
+              <div class="Form__Item">
+                {%- if block.settings.use_long_text -%}
+                  <textarea name="contact[{{ field_title | escape }}]" cols="30" rows="10" class="Form__Textarea" aria-label="{{ block.settings.title | escape }}" placeholder="{{ block.settings.title | escape }}" {% if block.settings.is_required %}required{% endif %}></textarea>
+                  <label class="Form__FloatingLabel">{{ block.settings.title | escape }}</label>
+                {%- else -%}
+                  <input type="text" class="Form__Input" name="contact[{{ field_title | escape }}]" aria-label="{{ block.settings.title | escape }}" placeholder="{{ block.settings.title | escape }}" {% if block.settings.is_required %}required{% endif %}>
+                  <label class="Form__FloatingLabel">{{ block.settings.title | escape }}</label>
+                {%- endif -%}
+              </div>
+            {%- elsif block.type == 'dropdown' -%}
+              {%- assign values = block.settings.values | split: ',' -%}
+
+              {%- if values == empty -%}
+                {%- continue -%}
+              {%- endif -%}
+
+              <div class="Form__Item">
+                <div class="Form__Select Select Select--primary">
+                  {%- render 'icon' with 'select-arrow' -%}
+
+                  <select name="contact[{{ field_title | escape }}]" title="{{ block.settings.title | escape }}" required>
+                    <option value="" disabled selected>{{ block.settings.title | escape }}</option>
+
+                    {%- for value in values -%}
+                      {%- assign trim_value = value | strip -%}
+
+                      <option value="{{ trim_value | escape }}">{{ trim_value | escape }}</option>
+                    {%- endfor -%}
+                  </select>
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        {% endcomment %}
+
+          <div class="Form__Item">
+            <textarea name="contact[body]" cols="30" rows="10" class="Form__Textarea" aria-label="{{ 'contact.form.message' | t }}" placeholder="{{ 'contact.form.message' | t }}" required></textarea>
+            <label class="Form__FloatingLabel">{{ 'contact.form.message' | t }}</label>
+          </div>
+		{% if section.settings.terms_section != blank %}
+        <div class="Form__Item terms-check-item">
+          <input type="checkbox" id="Form__Checkboxlabel" >
+          <label for="Form__Checkboxlabel" class="terms-note">{{section.settings.terms_section}}</label>
+        </div>
+        {% endif %}
+        
+
+          <button type="submit" class="Form__Submit Button Button--primary Button--full">{{ 'contact.form.submit' | t }}</button>
+        {%- endform -%}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% schema %}
+{
+  "name": "Contact page",
+  "settings": [
+  {
+      "type": "image_picker",
+      "id": "bgimage",
+      "label": "Background image"
+    },
+  {
+       "type": "text",
+       "id": "contact-heading",
+       "label": "Heading of contact",
+       "default": "Heading"
+    },
+  {
+       "type": "text",
+       "id": "contact-subheading",
+       "label": "Sub Heading of contact",
+       "default": "Sub Heading"
+    },
+  {
+       "type": "textarea",
+       "id": "contact-address",
+       "label": "Address of contact",
+       "default": "Dummy Address"
+    },
+  {
+       "type": "text",
+       "id": "contact-phone",
+       "label": "Phone of contact",
+       "default": "+91-98765-4310"
+    },
+  	{
+       "type": "text",
+       "id": "contact-email",
+       "label": "Email of contact",
+       "default": "test@example.com"
+    },
+	{
+       "type": "textarea",
+       "id": "terms_section",
+       "label": "Term Setup",
+       "default": "As an interested party, having read the Privacy Policy. I expressly consent to the processing of my personal data for replying to my information request by a.Testoni"
+    }
+
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text field",
+      "settings": [
+        {
+          "type": "text",
+          "id": "accheading",
+          "label": "Heading",
+          "default": "Custom field"
+        },
+        {
+           "type": "textarea",
+          "id": "accsubheading",
+          "label": "Content",
+          "default": "Custom field  Section"
+        },
+         {
+          "type": "text",
+          "id": "phone",
+          "label": "Phone No",
+          "default": "Custom field"
+        },
+         {
+          "type": "text",
+          "id": "fax",
+          "label": "Fax No"
+        },
+         {
+          "type": "text",
+          "id": "emailaddress",
+          "label": "Email"
+        }
+      ]
+    }
+  
+  ]
+}
+{% endschema %}
+

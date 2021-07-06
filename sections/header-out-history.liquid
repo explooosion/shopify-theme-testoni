@@ -1,0 +1,17 @@
+<header class="inner-PageHeader">
+  <div class="inner-SectionHeader" style="background-image:url({{ section.settings.ourhistorybanner | img_url:'1024x'}});">
+    <h1 class="inner-SectionHeader__Heading">{{ page.title }}</h1>
+  </div>
+</header>
+{% schema %}
+  {
+    "name": "Our Store Banner Image",
+    "settings": [
+		{
+          "type": "image_picker",
+          "id": "ourhistorybanner",
+          "label": "Banner image"
+        }
+	]
+  }
+{% endschema %}

@@ -1,0 +1,107 @@
+{% if section.settings.enable_first_section %}
+<div class="season-grid-row">
+  <div class="season-grid-col">
+    {% for block in section.blocks %}
+    {% if block.type == 'leftblock' %}
+    <figure class="season-grid-media">
+      <a href="{{ block.settings.productlink }}"><img src="{{ block.settings.ist_image | img_url: 'master' }} [(max-width: 640px)] | {{ block.settings.ist_image | img_url: 'master' }}" alt="slide">
+      </a></figure>
+    <div class="season-grid-content">
+      <h3>{{ block.settings.text_title }}</h3>
+      <p>{{block.settings.description}}</p>
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+  <div class="season-grid-col">
+    {% for block in section.blocks %}
+    {% if block.type == 'rightblock' %}
+    <figure class="season-grid-media">
+     <a href="{{ block.settings.productlink }}"><img src="{{ block.settings.second_image | img_url: 'master' }} [(max-width: 640px)] | {{ block.settings.second_image | img_url: 'master' }}" alt="slide">
+     </a></figure>
+    <div class="season-grid-content">
+      <h3>{{ block.settings.text_title }}</h3>
+      <p>{{ block.settings.description }}</p>
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Season Preview section 1",
+	"settings":[
+		{
+          "type": "checkbox",
+          "id": "enable_first_section",
+          "label": "Show section",
+          "default": true
+        }
+	],
+    "blocks":[
+      {
+        "type": "leftblock",
+        "name": "Left Block",
+        "limit": 1,
+        "settings": [
+        {
+         "type": "image_picker",
+         "id": "ist_image",
+         "label": "First Image"
+        },
+ 		{
+            "type": "text",
+            "id": "text_title",
+            "label": "Heading"
+        },
+        {
+            "type": "textarea",
+            "id": "description",
+            "label": "Description"
+        },
+        {
+          "type": "url",
+          "id": "productlink",
+          "label": "Product to link"
+        }
+        ]
+       },
+       {
+        "type": "rightblock",
+        "name": "Right Block",
+		"limit": 1,
+        "settings": [
+         {
+         "type": "image_picker",
+         "id": "second_image",
+         "label": "Second Image"
+        },
+		{
+            "type": "text",
+            "id": "text_title",
+            "label": "Heading"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description"
+        },
+         {
+        "type": "url",
+        "id": "productlink",
+        "label": "Product to link"
+       }
+        ]
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

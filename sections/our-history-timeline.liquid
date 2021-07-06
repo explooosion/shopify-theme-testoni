@@ -1,0 +1,245 @@
+<div class="history-timeline-outer">
+  <div class="container">
+  {%- for block in section.blocks -%}
+  {% if block.type == 'look' %} 
+    
+  <div class="history-timeline-inner section-code-{{- block.settings.year_of_time | remove:' ' -}}">      
+    {% capture imageSection %}
+    <div class="history-timeline-image-element">
+      {%- if block.settings.image != blank -%}	      			
+      {%- assign image_url = block.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+      {%- capture supported_sizes -%}{%- render 'image-size', sizes: '200,400,600,700,800,1000,1200', image: block.settings.image -%}{%- endcapture -%}
+      <img class="ShopTheLook__Image Image--lazyLoad Image--fadeIn"
+           data-src="{{ image_url }}"
+           data-widths="[{{ supported_sizes }}]"
+           data-sizes="auto"
+           alt="{{ block.settings.image.alt | escape }}"
+			style="width:{{block.settings.image_max_width}}%; {% if block.settings.imageAlign != 'center' %}float:{{block.settings.imageAlign}};{% endif %} height: auto;">
+
+      <noscript>
+        <img class="ShopTheLook__Image" src="{{ block.settings.image | img_url: '600x' }}" alt="{{ block.settings.image.alt | escape }}">
+      </noscript>
+      {%- else -%}
+      {%- capture placeholder -%}{% cycle 'collection-1', 'collection-2', 'collection-3', 'collection-4' %}{%- endcapture -%}
+      {{ placeholder | placeholder_svg_tag: 'PlaceholderSvg PlaceholderSvg--dark' }}
+
+      {%- endif -%}
+    </div>
+    {% endcapture %}
+
+
+    {% capture textSection %}
+    {%- if block.settings.title_text != blank or block.settings.description_text != blank -%}
+    <header class="SectionHeader SectionHeader--center">
+      <div class="Container">
+        {%- if block.settings.year_of_time != blank -%}
+        <h1>{{ block.settings.year_of_time | escape }}</h1>
+        {%- endif -%}
+
+         {%- if block.settings.title_text != blank -%}
+        <h2 class="html-text">{{ block.settings.title_text }}</h2>
+        {%- endif -%}
+
+        {%- if block.settings.description_text != blank -%}
+        <div class="html-text">{{ block.settings.description_text }}</div>
+        {%- endif -%}
+      </div>
+    </header>
+    {%- endif -%}
+    {% endcapture %}
+
+    {% if block.settings.dot_style == 'left'%}
+    {{textSection}}
+    {% endif %}
+    {{imageSection}}
+    {% if block.settings.dot_style == 'right'%}
+    {{textSection}}
+    {% endif %}
+
+
+
+  </div>
+    {% endif %}
+    
+    {% if block.type == 'links' %}
+    
+    {% capture imageSection %}
+   
+      {%- if block.settings.image != blank -%}	      			
+      {%- assign image_url = block.settings.image | img_url: '1x1', format: 'pjpg' | replace: '_1x1.', '_{width}x.' -%}
+      {%- capture supported_sizes -%}{%- render 'image-size', sizes: '200,400,600,700,800,1000,1200', image: block.settings.image -%}{%- endcapture -%}
+      <img class="ShopTheLook__Image Image--lazyLoad Image--fadeIn"
+           data-src="{{ image_url }}"
+           data-widths="[{{ supported_sizes }}]"
+           data-sizes="auto"
+           alt="{{ block.settings.image.alt | escape }}"
+           style="width:{{block.settings.image_max_width}}%; {% if block.settings.imageAlign != 'center' %}float:{{block.settings.imageAlign}};{% endif %} height: auto;">
+
+      <noscript>
+        <img class="ShopTheLook__Image" src="{{ block.settings.image | img_url: '600x' }}" alt="{{ block.settings.image.alt | escape }}">
+      </noscript>
+      {%- else -%}
+      {%- capture placeholder -%}{% cycle 'collection-1', 'collection-2', 'collection-3', 'collection-4' %}{%- endcapture -%}
+      {{ placeholder | placeholder_svg_tag: 'PlaceholderSvg PlaceholderSvg--dark' }}
+
+      {%- endif -%}
+  
+    {% endcapture %}
+    
+    
+    {%- if block.settings.image != blank -%}
+    <div class="center-align-part">{{ imageSection }}</div>
+    {%- endif -%}
+    {%- endif -%}
+    
+    {% if block.type == 'text' %}
+    {%- if block.settings.title != blank -%}
+    <h1 class="end-year">{{ block.settings.title | escape }}</h1>
+    {%- endif -%}
+    {%- endif -%}
+    
+    
+  {%- endfor -%}
+
+</div>
+</div>
+{% schema %}
+{
+  "name": "History Timeline",
+  "class": "shopify-section--bordered",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "look",
+      "name": "Timeline",
+      "settings": [
+        {
+          "type": "text",
+          "id": "year_of_time",
+          "label": "Timeline Year"
+        },
+		{
+          "type": "html",
+          "id": "title_text",
+          "label": "Title Text"
+        },
+		{
+          "type": "html",
+          "id": "description_text",
+          "label": "Description Text"
+        },
+		{
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "975 x 1185px .jpg recommended (vertical image) or 1200 x 1200px .jpg recommended (square image)."
+        },
+		{
+          "type": "select",
+          "id": "imageAlign",
+          "label": "Image Alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left Corner"
+            },
+            {
+              "value": "right",
+              "label": "Right Corner"
+            },
+			{
+              "value": "center",
+              "label": "Center"
+            }
+          ],
+          "default": "left"
+        },
+ 		{
+          "type": "range",
+          "id": "image_max_width",
+          "min": 10,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "label": "Image width",
+          "default": 50
+        },
+        {
+          "type": "select",
+          "id": "dot_style",
+          "label": "Block Display Style",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left Align"
+            },
+            {
+              "value": "right",
+              "label": "Right Align"
+            }
+          ],
+          "default": "left"
+        }
+      ]
+    },
+	 
+	{
+      "type": "text",
+      "name": "Sidebar Year",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Sidebar Year"
+        }
+      ]
+    },
+	{
+      "type": "links",
+      "name": "Center Section",
+      "settings": [
+       {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "975 x 1185px .jpg recommended (vertical image) or 1200 x 1200px .jpg recommended (square image)."
+        },{
+          "type": "select",
+          "id": "imageAlign",
+          "label": "Image Alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left Corner"
+            },
+            {
+              "value": "right",
+              "label": "Right Corner"
+            },
+			{
+              "value": "center",
+              "label": "Center"
+            }
+          ],
+          "default": "center"
+        },
+ 		{
+          "type": "range",
+          "id": "image_max_width",
+          "min": 10,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "label": "Image width",
+          "default": 100
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

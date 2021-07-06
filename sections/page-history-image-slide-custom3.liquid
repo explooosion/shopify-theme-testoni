@@ -1,0 +1,164 @@
+<section id="section-{{ section.id }}" class="Section" data-section-id="{{ section.id }}" data-section-type="timeline">
+  <div class="Timeline">
+    <div class="Timeline__ListItem">
+      <div class="history-section-timeline">
+      {%- for block in section.blocks -%}
+      {%- if block.type == 'text' -%}
+      {%- capture section_inner -%}
+        {%- if block.settings.subheading != blank or block.settings.heading != blank -%}
+        <header class="Timeline__Header SectionHeader SectionHeader--center">
+          {%- if block.settings.subheading != blank -%}
+          <h1 class="SectionHeader__Heading Heading u-h1">{{ block.settings.subheading | escape }}</h1>
+          {%- endif -%}
+
+          {%- if block.settings.heading != blank -%}
+          <h2 class="SectionHeader__Heading Heading u-h1">{{ block.settings.heading | escape }}</h2>
+          {%- endif -%}
+
+          {%- if block.settings.content != blank -%}
+          <div class="SectionHeader__Description Rte">
+            {{ block.settings.content }}
+          </div>
+          {%- endif -%}
+        </header>
+        {%- endif -%}
+        {%- endcapture -%}
+      {%- endif -%}
+      
+      {%- if block.type == 'item' -%}
+      
+      <div {{ block.shopify_attributes }} class="Timeline__Item {% if forloop.first %}is-selected{% endif %}" data-index="{{ forloop.index0 }}">
+        <div class="Timeline__ImageWrapper {% if block.settings.apply_overlay %}Image--contrast{% endif %}" {% if block.settings.image %}style="background: url({{ block.settings.image | img_url: '1x1' }})"{% endif %}>
+          {%- if block.settings.image -%}
+          <div class="Timeline__Image Image--lazyLoad hide-no-js" data-bgset="{{ block.settings.image | img_url: 'x650' }} [(max-width: 640px)] | {{ block.settings.image | img_url: '1000x' }}"></div>
+
+          <noscript>
+            <div class="Timeline__Image" style="background-image: url({{ block.settings.image | img_url: '1000x' }})"></div>
+          </noscript>
+          {%- else -%}
+          <div class="Timeline__Image">
+            <div class="PlaceholderBackground">
+              {%- capture placeholder -%}{% cycle 'lifestyle-1', 'lifestyle-2' %}{%- endcapture -%}
+              {{ placeholder | placeholder_svg_tag: 'PlaceholderBackground__Svg PlaceholderSvg--dark' }}
+            </div>
+          </div>
+          {%- endif -%}
+        </div>
+
+         </div>
+      {%- endif -%}     
+      {%- endfor -%}
+        <div class="Timeline__Nav">
+      <div class="Timeline__NavWrapper {% if section.blocks.size <= 3 %}Timeline__NavWrapper--center{% endif %}">
+        {%- if section.blocks.size >= 2 -%}
+        <button class="btn Timeline__NavItem opacity" id="nav-pre-next3" type="button" data-index="0">Back</button>
+        <button class="btn Timeline__NavItem" id="nav-next-pre3" type="button" data-index="0">Next</button>
+        {%- endif -%}
+      </div>
+      {%- if section.settings.footer-text != blank -%}
+      <div class="foooter-textarea">
+        {{section.settings.footer-text}}
+      </div>
+      {% endif %}
+    </div> 
+      </div>
+       {%- if section_inner -%}
+      
+        <div class="Timeline__Inner-history">
+          {{ section_inner }}
+        </div>
+        {%- endif -%}
+    </div>
+         
+  </div>
+</section>
+
+<style>
+  #section-{{ section.id }} .Timeline__ListItem {
+    color: {{ section.settings.text_color }};
+  }
+  .opacity{
+  	opacity:0.3;
+  }
+</style>
+<script type="text/javascript">
+  if (document.getElementById("nav-pre-next3") && document.getElementById("nav-next-pre3")) {
+    const totalSize3 = {{section.blocks.size | minus: 1}};  
+    document.getElementById("nav-pre-next3").addEventListener("click",function(){
+      let dataN = document.getElementById("nav-next-pre3").getAttribute("data-index");
+      if(dataN <= 0){
+        document.getElementById("nav-pre-next3").setAttribute("data-index","0");
+        document.getElementById("nav-next-pre3").setAttribute("data-index","0");     
+      }else{
+        document.getElementById("nav-pre-next3").setAttribute("data-index",parseInt(dataN)-1);
+        document.getElementById("nav-next-pre3").setAttribute("data-index",parseInt(dataN)-1);
+        document.getElementById("nav-next-pre3").classList.remove('opacity');
+      }
+      if(dataN <=1){
+          document.getElementById("nav-pre-next3").classList.add('opacity');
+      }    
+    });
+    document.getElementById("nav-next-pre3").addEventListener("click", function(){
+      let dataP = document.getElementById("nav-next-pre3").getAttribute("data-index");
+      if(dataP >= {{section.blocks.size | minus: 2 }} ){
+          document.getElementById("nav-next-pre3").setAttribute("data-index",parseInt(dataP));
+          document.getElementById("nav-pre-next3").setAttribute("data-index",parseInt(dataP));
+
+      }else{
+          document.getElementById("nav-next-pre3").setAttribute("data-index",parseInt(dataP)+1);
+          document.getElementById("nav-pre-next3").setAttribute("data-index",parseInt(dataP)+1);
+          document.getElementById("nav-pre-next3").classList.remove('opacity');
+      }
+      if(dataP >= {{section.blocks.size | minus: 3 }} ){
+         document.getElementById("nav-next-pre3").classList.add('opacity');
+      }
+    });
+  }
+</script>
+{% schema %}
+{
+	"name": "Image Content Section 5",
+	"class": "shopify-section--bordered shopify-section--history",
+	"settings": [	
+	],
+	"blocks": [
+	{
+      	"type": "item",
+      	"name": "Item",
+		"settings": [
+		{
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "1200 x 1200px .jpg recommended"
+		}
+		]
+	},
+	{
+      	"type": "text",
+      	"name": "Text",
+		"limit":1,
+		"settings": [
+		{
+          "type": "text",
+          "id": "subheading",
+          "label": "Heading Label",
+          "default": "1"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Text",
+          "default": "<p>Add your own custom content to give more information about your store, availability details...</p>"
+        }
+		]
+	}
+]
+}
+{% endschema %}

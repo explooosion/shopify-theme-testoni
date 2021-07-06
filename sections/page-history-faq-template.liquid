@@ -1,0 +1,55 @@
+<section data-section-type="faq" data-section-id="{{ section.id }}" class="accordion-custom-style">
+  <div class="Faq">
+    {%- for block in section.blocks -%}
+    {%- if block.type == 'text' -%}
+    {%- assign field_title = block.settings.accheading -%}
+
+    <div class="Faq__Item {% if section.blocks[forloop.index].type == 'separator' or forloop.last %}Faq__Item--lastOfSection{% endif %}" aria-expanded="false" {{ block.shopify_attributes }}>
+      
+      <div class="Faq__ItemWrapper">
+        <button class="Faq__Question">{{ field_title | escape }}<span class="Faq__Icon">{% render 'icon' with 'select-arrow-right' %}</span></button>
+        <div class="Faq__AnswerWrapper" aria-hidden="true">
+          <div class="Faq__Answer Rte">
+            {{ block.settings.accsubheading }}
+          </div>
+        </div>
+      </div>
+    </div>      
+    {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "History Faq",
+    "settings": [],
+    "blocks": [
+        {
+          "type": "text",
+          "name": "History Questioner",
+          "settings": [
+            {
+              "type": "text",
+              "id": "accheading",
+              "label": "Heading",
+              "default": "Custom field"
+            },
+            {
+               "type": "textarea",
+              "id": "accsubheading",
+              "label": "Content",
+              "default": "Custom field  Section"
+            }
+          ]
+        }
+
+      ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

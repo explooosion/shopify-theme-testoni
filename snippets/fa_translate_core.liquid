@@ -1,0 +1,8 @@
+{% if request.design_mode %}
+<!--  TODO : handle design mode -->
+{% else %}
+<link rel="stylesheet" href="https://transcy.fireapps.io/store/assets/css/main.css?v=2.3_1614045733">  
+  
+ <script>let transcy_apiURI = "https://transcy-api.fireapps.io/api";let transcy_productId = "{{product.id}}";</script> 
+ <script src="https://transcy.fireapps.io/store/assets/js/main.js?v=2.3_1614045733" defer="defer"></script>
+{% endif %}

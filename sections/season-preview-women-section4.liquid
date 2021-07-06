@@ -1,0 +1,106 @@
+<div class="season-bottom-section">
+  <div class="season-bottom-inner">
+    
+    <div class="season-bottom-left">
+      <div>
+      {% for block in section.blocks %}
+        {% if block.type == 'leftblock' %}
+          <h2 class="season-bottom-heading">{{ block.settings.title }} </h2>
+          <p>{{ block.settings.description }}</p>
+          <a href="{{ block.settings.buttonlink }}" class="custom-btn-style">{{ block.settings.linktext }} </a>       
+        {% endif %}
+      {% endfor %}
+      </div>
+    </div>
+
+    <div class="season-bottom-middle">
+      {% for block in section.blocks %}
+        {% if block.type == 'rightblock' %}
+        	<img src="{{ block.settings.image | img_url: 'master' }} [(max-width: 640px)] | {{ block.settings.image | img_url: 'master' }}" alt="slide"> 
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="season-bottom-right">
+      {% for block in section.blocks %}
+        {% if block.type == 'rightblock' %}
+          <h2 class="season-bottom-heading">{{ block.settings.heading }} </h2>
+          <h4 class="season-bottom-sub-heading">{{ block.settings.subheading }}</h4>
+          <p>{{ block.settings.description }}</p>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "Season Preview section 4",
+    "blocks":[
+      {
+        "type": "leftblock",
+        "name": "Left Block",
+        "limit": 1,
+        "settings": [
+        {
+         "type": "text",
+         "id": "title",
+         "label": "Heading"
+        },       
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description"
+        },
+        {
+      "id": "linktext",
+      "type": "text",
+      "label": "Button text",
+      "default": "Discover"
+       },
+        {
+            "type": "url",
+            "id": "buttonlink",
+            "label": "Button Link"
+        }
+        ]
+       },
+       {
+        "type": "rightblock",
+        "name": "Right Block",
+		"limit": 1,
+        "settings": [
+         {
+         "type": "image_picker",
+         "id": "image",
+         "label": "Image"
+        }, 
+        {
+         "type": "text",
+         "id": "heading",
+         "label": "Heading"
+        },   
+         {
+         "type": "text",
+         "id": "subheading",
+         "label": "Sub Heading"
+        },     
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description"
+        }
+         
+        ]
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

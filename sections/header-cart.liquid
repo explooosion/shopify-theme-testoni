@@ -1,0 +1,19 @@
+<header class="inner-PageHeader">
+  <div class="inner-SectionHeader" style="background-image:url({{ section.settings.cartbanner | img_url:'1024x'}});">
+   <h1 class="inner-SectionHeader__Heading">
+         {{ 'cart.general.title' | t }}
+        </h1>
+  </div>
+</header>
+{% schema %}
+  {
+    "name": "Cart Image",
+    "settings": [
+		{
+          "type": "image_picker",
+          "id": "cartbanner",
+          "label": "Banner image"
+        }
+	]
+  }
+{% endschema %}

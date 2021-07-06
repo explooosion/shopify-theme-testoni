@@ -1,0 +1,49 @@
+@font-face {
+	font-family: 'Forma DJR Deck';
+	src: url('FormaDJRDeck-ExtraLight.woff2') format('woff2'),
+		url('FormaDJRDeck-ExtraLight.woff') format('woff'),
+		url('FormaDJRDeck-ExtraLight.svg#FormaDJRDeck-ExtraLight') format('svg');
+	font-weight: 200;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Forma DJR Deck';
+	src: url('FormaDJRDeck-Light.woff2') format('woff2'),
+		url('FormaDJRDeck-Light.woff') format('woff'),
+		url('FormaDJRDeck-Light.svg#FormaDJRDeck-Light') format('svg');
+	font-weight: 300;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Forma DJR Deck';
+	src: url('FormaDJRDeck-Medium.woff2') format('woff2'),
+		url('FormaDJRDeck-Medium.woff') format('woff'),
+		url('FormaDJRDeck-Medium.svg#FormaDJRDeck-Medium') format('svg');
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Forma DJR Deck';
+	src: url('FormaDJRDeck-Regular.woff2') format('woff2'),
+		url('FormaDJRDeck-Regular.woff') format('woff'),
+		url('FormaDJRDeck-Regular.svg#FormaDJRDeck-Regular') format('svg');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Forma DJR Deck';
+	src: url('FormaDJRDeck-Bold.woff2') format('woff2'),
+		url('FormaDJRDeck-Bold.woff') format('woff'),
+		url('FormaDJRDeck-Bold.svg#FormaDJRDeck-Bold') format('svg');
+	font-weight: bold;
+	font-style: normal;
+	font-display: swap;
+}

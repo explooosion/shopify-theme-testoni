@@ -1,0 +1,5 @@
+
+{% comment %}This file is required for multi-country pricing app.{% endcomment %}
+{% paginate search.results by 5 %}
+getProducts({% layout none %}{{ search.results | json  }})
+{% endpaginate %}
