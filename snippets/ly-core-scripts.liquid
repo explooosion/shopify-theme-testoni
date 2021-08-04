@@ -497,7 +497,7 @@
         var isLocalized = (url.indexOf('/'+{{ request.locale.iso_code | json }}+'/') === 0 || url === '/'+{{ request.locale.iso_code | json }} || url.indexOf('/'+{{ request.locale.iso_code | downcase | json }}+'/') === 0 || url === '/'+{{ request.locale.iso_code | downcase | json }});
         var link = url.replace({{ shop.url | json }}, '').replace(/\/{{ request.locale.iso_code | replace: '-', '\-' }}\//gi, '/');
         var isUrlAbsolute = (link.indexOf('://') > 0 || link.indexOf('//') === 0);
-        var blacklist = ['#'].concat(langify.settings.linksBlacklist);
+        var blacklist = ['#', '/{{ request.locale.iso_code | downcase }}#'].concat(langify.settings.linksBlacklist);
         var isUrlBlacklisted = blacklist.find(x => url.indexOf(x) === 0);
         if(!isLocalized && !isUrlAbsolute && !isUrlBlacklisted && {{ request.locale.root_url | json }} != '/') {
           if(node.hasAttribute('href')) var attrName = 'href'; else var attrName = 'action';
@@ -1026,6 +1026,7 @@
         } else {
           if(langify.helper.getCookie('ly-lang-selected') && langify.helper.getCookie('ly-lang-selected') !== currentLang) {
             if(languageUrls[langify.helper.getCookie('ly-lang-selected')]) {
+              langify.helper.setCookie('ly-lang-selected', currentLang, 365);
               this.redirect(languageUrls[langify.helper.getCookie('ly-lang-selected')]);
             }
           }

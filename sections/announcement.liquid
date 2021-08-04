@@ -5,7 +5,7 @@
         <div class="AnnouncementBar__Wrapper">
           <p class="AnnouncementBar__Content Heading">
             {%- if section.settings.link -%}
-              <a href="{{ section.settings.link }}">{{ section.settings.content | escape }}</a>
+              <a href="{{ section.settings.link }}" class="ab">{{ section.settings.content | escape }}</a>
             {%- else -%}
               {{ section.settings.content | escape }}
             {%- endif -%}
